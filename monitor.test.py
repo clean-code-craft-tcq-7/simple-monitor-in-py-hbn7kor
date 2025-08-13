@@ -1,11 +1,16 @@
 import unittest
-from monitor import is_inrange, check_vitals, vitals_ok
+from monitor import display, sensorStub, translate, is_inrange, check_vitals, vitals_ok
 
 
 class MonitorTest(unittest.TestCase):
-    def test_vitals_ok(self):
-        self.assertTrue(vitals_ok(98.1, 70, 98))
-        self.assertFalse(vitals_ok(99, 102, 70))
+    def test_display(self):
+        self.assertFalse(display("sample error message"))
+
+    def test_sensorStub(self):
+        self.assertIsNotNone(sensorStub())
+
+    def test_translate(self):
+        self.assertEqual(translate("Good Morning", "german"), "Guten Morgen")
 
     def test_is_in_range(self):
         self.assertTrue(is_inrange(96, 95, 102))
@@ -14,6 +19,39 @@ class MonitorTest(unittest.TestCase):
     def test_check_vitals(self):
         self.assertTrue(check_vitals(96, 95, 102, "sample error message!"))
         self.assertFalse(check_vitals(110, 95, 102, "sample error message!"))
+
+    def test_vitals_ok(self):
+        self.assertTrue(vitals_ok(sensorStub()))
+
+    def test_temperature(self):
+        sensorstub = sensorStub()
+        sensorstub["temperature"] = 103
+        self.assertFalse(vitals_ok(sensorstub))
+
+    def test_pulserate(self):
+        sensorstub = sensorStub()
+        sensorstub["pulserate"] = 103
+        self.assertFalse(vitals_ok(sensorstub))
+
+    def test_spo2(self):
+        sensorstub = sensorStub()
+        sensorstub["spo2"] = 103
+        self.assertFalse(vitals_ok(sensorstub))
+
+    def test_blood_sugar(self):
+        sensorstub = sensorStub()
+        sensorstub["blood-sugar"] = 112
+        self.assertFalse(vitals_ok(sensorstub))
+
+    def test_blood_pressure(self):
+        sensorstub = sensorStub()
+        sensorstub["blood-pressure"] = 160
+        self.assertFalse(vitals_ok(sensorstub))
+
+    def test_respiratory_rate(self):
+        sensorstub = sensorStub()
+        sensorstub["respiratory-rate"] = 25
+        self.assertFalse(vitals_ok(sensorstub))
 
 
 if __name__ == "__main__":
