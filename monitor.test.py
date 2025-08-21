@@ -1,5 +1,5 @@
 import unittest
-from monitor import display, sensorStub, translate, is_inrange, check_vitals, vitals_ok
+from monitor import VITALS, display, sensorStub, translate, is_inrange, check_vitals, print_status, vitals_ok
 
 
 class MonitorTest(unittest.TestCase):
@@ -10,7 +10,7 @@ class MonitorTest(unittest.TestCase):
         self.assertIsNotNone(sensorStub())
 
     def test_translate(self):
-        self.assertEqual(translate("Good Morning", "german"), "Guten Morgen")
+        self.assertEqual(translate("Good Morning", "german"), "GUTEN MORGEN")
 
     def test_is_in_range(self):
         self.assertTrue(is_inrange(96, 95, 102))
@@ -19,6 +19,9 @@ class MonitorTest(unittest.TestCase):
     def test_check_vitals(self):
         self.assertTrue(check_vitals(96, 95, 102, "sample error message!"))
         self.assertFalse(check_vitals(110, 95, 102, "sample error message!"))
+
+    def test_print_status(self):
+        self.assertTrue(print_status(VITALS[0], 99))
 
     def test_vitals_ok(self):
         self.assertTrue(vitals_ok(sensorStub()))
